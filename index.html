@@ -50,24 +50,53 @@ button {
   cursor: pointer;
 }
 
-/* Floating hearts */
-@keyframes floatUp {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-110vh); opacity: 0; }
+/* 💞 FLOATING HEARTS (CLICKABLE + EXPLODE) */
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.innerHTML = "❤️";
+  heart.style.position = "absolute";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.bottom = "-20px";
+  heart.style.fontSize = Math.random() * 20 + 20 + "px";
+  heart.style.animation = "floatUp 6s linear forwards";
+  heart.style.cursor = "pointer";
+  heart.style.zIndex = "1";
+
+  heart.addEventListener("click", (e) => {
+    explodeHearts(e.clientX, e.clientY);
+    heart.remove();
+  });
+
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 6000);
+}, 400);
+
+/* 💥 Sparkle Explosion */
+function explodeHearts(x, y) {
+  for (let i = 0; i < 15; i++) {
+    const spark = document.createElement("div");
+    spark.innerHTML = "✨";
+    spark.style.position = "absolute";
+    spark.style.left = x + "px";
+    spark.style.top = y + "px";
+    spark.style.pointerEvents = "none";
+    spark.style.fontSize = "18px";
+    spark.style.transition = "all 0.8s ease-out";
+    document.body.appendChild(spark);
+
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = Math.random() * 60 + 40;
+
+    setTimeout(() => {
+      spark.style.transform =
+        `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(1.5)`;
+      spark.style.opacity = "0";
+    }, 10);
+
+    setTimeout(() => spark.remove(), 800);
+  }
 }
-</style>
-</head>
-<body>
 
-<canvas id="stars"></canvas>
-
-<div class="container">
-  <h1 id="title"></h1>
-  <div id="content"></div>
-  <div id="extra"></div>
-</div>
-
-<script>
 /* ⭐ STAR BACKGROUND */
 const canvas = document.getElementById("stars");
 const ctx = canvas.getContext("2d");
@@ -260,4 +289,5 @@ function launchConfetti() {
 
 </body>
 </html>
+
 
