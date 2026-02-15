@@ -42,16 +42,18 @@ h1 {
   white-space: pre-line;
 }
 
-/* 💞 Floating up */
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* Floating hearts */
 @keyframes floatUp {
   0% { transform: translateY(0); opacity: 1; }
   100% { transform: translateY(-110vh); opacity: 0; }
-}
-
-/* 💥 Explosion animation */
-@keyframes explode {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(2.5); opacity: 0; }
 }
 </style>
 </head>
@@ -62,11 +64,11 @@ h1 {
 <div class="container">
   <h1 id="title"></h1>
   <div id="content"></div>
+  <div id="extra"></div>
 </div>
 
 <script>
-  
-// ⭐ Star Background
+/* ⭐ STAR BACKGROUND */
 const canvas = document.getElementById("stars");
 const ctx = canvas.getContext("2d");
 
@@ -74,111 +76,64 @@ function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
-
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
 let stars = [];
-
 for (let i = 0; i < 200; i++) {
   stars.push({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
-    radius: Math.random() * 1.5,
-    alpha: Math.random(),
+    r: Math.random() * 1.5,
+    a: Math.random(),
     speed: Math.random() * 0.7 + 0.2
   });
 }
 
 function drawStars() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  stars.forEach(star => {
-    star.y += star.speed;
-
-    if (star.y > canvas.height) {
-      star.y = 0;
-      star.x = Math.random() * canvas.width;
+  stars.forEach(s => {
+    s.y += s.speed;
+    if (s.y > canvas.height) {
+      s.y = 0;
+      s.x = Math.random() * canvas.width;
     }
-
     ctx.beginPath();
-    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(255,255,255," + star.alpha + ")";
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,255,255," + s.a + ")";
     ctx.fill();
   });
-
-  requestAnimationFrame(drawStars); // 🔥 smoother animation
+  requestAnimationFrame(drawStars);
 }
-
 drawStars();
 
+/* 💞 FLOATING HEARTS */
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.innerHTML = "❤️";
+  heart.style.position = "absolute";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.bottom = "-20px";
+  heart.style.fontSize = Math.random() * 20 + 20 + "px";
+  heart.style.animation = "floatUp 6s linear forwards";
+  heart.style.pointerEvents = "none";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 6000);
+}, 400);
 
-// 💞 Floating Hearts (Clickable Explosion)
-function startHearts() {
-  setInterval(() => {
-    const heart = document.createElement("div");
-    heart.innerHTML = "❤️";
-    heart.style.position = "absolute";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.bottom = "-20px";
-    heart.style.fontSize = Math.random() * 20 + 20 + "px";
-    heart.style.animation = "floatUp 6s linear forwards";
-    heart.style.cursor = "pointer";
-    heart.style.zIndex = "1";
-
-    // 💥 Click = explosion
-    heart.addEventListener("click", (e) => {
-      explodeHeart(e.clientX, e.clientY);
-      heart.remove();
-    });
-
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 6000);
-
-  }, 400);
-}
-
-function explodeHeart(x, y) {
-  for (let i = 0; i < 12; i++) {
-    const spark = document.createElement("div");
-    spark.innerHTML = "✨";
-    spark.style.position = "absolute";
-    spark.style.left = x + "px";
-    spark.style.top = y + "px";
-    spark.style.fontSize = "18px";
-    spark.style.pointerEvents = "none";
-    spark.style.transition = "all 0.8s ease-out";
-
-    document.body.appendChild(spark);
-
-    const angle = Math.random() * 2 * Math.PI;
-    const distance = Math.random() * 60 + 30;
-
-    setTimeout(() => {
-      spark.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(1.5)`;
-      spark.style.opacity = "0";
-    }, 10);
-
-    setTimeout(() => spark.remove(), 800);
-  }
-}
-
-startHearts();
-
-// 📅 Anniversary
+/* 📅 COUNTDOWN */
 const anniversary = new Date(2026, 1, 18, 0, 0, 0);
 const now = new Date();
-
 const title = document.getElementById("title");
 const content = document.getElementById("content");
+const extra = document.getElementById("extra");
 
 if (now < anniversary) {
 
   title.innerText = "Something Special Is Cominggg ❤️";
 
   function updateCountdown() {
-    const current = new Date();
-    const diff = anniversary - current;
+    const diff = anniversary - new Date();
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -197,6 +152,18 @@ if (now < anniversary) {
   setInterval(updateCountdown, 1000);
   updateCountdown();
 
+  /* 🎮 Wanna Play Button */
+  const gameBtn = document.createElement("button");
+  gameBtn.innerText = "Wanna play a game? 🎮";
+  gameBtn.style.marginTop = "30px";
+  gameBtn.style.background = "#ff66cc";
+  extra.appendChild(gameBtn);
+
+  gameBtn.onclick = () => {
+    gameBtn.remove();
+    startLoveGame();
+  };
+
 } else {
 
   title.innerText = "Happy 3 Months Babyyyy ❤️";
@@ -206,49 +173,90 @@ if (now < anniversary) {
 But with you, it feels meaningful..
 these 3 months rlly meant a lot to me..
 
-In these 3 months, you’ve become a part of my everyday life,
-in my thoughts,
-in my happiness,
-in my everything.
-
-You make ordinary days feel special..
-you make me feel understood..
-and that means more than I cn explain.
-
-and ik relationships aren't always perfect or simple, but the fact that we keep choosing each other
-every day makes me feel soo luckyy..
-
-There's moments where i lowk just sit and realise how lucky i am to have u..
-you make me feel loved in ways i never knew i needed..
-
-Thank you for choosing me everyday, even when things around us aren't always easy.
-I've never been treated so well so it means a lot to me, prob more than u realise..
-
-and even though i might be annoying or immature or a bad boyfriend in general sometimes,
-thank you for staying with me.
-thank you for loving me the way you do.
-thank you for everything you do for me..
-thank you for being with me, even at my worst..
-i love you so much and i promise you no one or nothing's ever gonna change that..
-mwah
-
 Happy 3 months my princess <3
-And... You're the best girlfriend everrrr ❤️`;
+You're the best girlfriend everrrr ❤️`;
 
-  let index = 0;
-
+  let i = 0;
   function typeWriter() {
-    if (index < text.length) {
-      content.innerHTML += text.charAt(index);
-      index++;
+    if (i < text.length) {
+      content.innerHTML += text.charAt(i);
+      i++;
       setTimeout(typeWriter, 40);
     }
   }
-
   typeWriter();
+}
+
+/* 💍 LOVE GAME */
+function startLoveGame() {
+  const question = document.createElement("div");
+  question.innerText = "Will you stay with me forever? 💍";
+  question.style.marginTop = "30px";
+  question.style.fontSize = "20px";
+  question.style.color = "#ff99dd";
+  extra.appendChild(question);
+
+  const btnWrap = document.createElement("div");
+  btnWrap.style.marginTop = "20px";
+  btnWrap.style.position = "relative";
+  btnWrap.style.height = "60px";
+  extra.appendChild(btnWrap);
+
+  const yes = document.createElement("button");
+  yes.innerText = "Yes 💖";
+  yes.style.background = "#ff66cc";
+  yes.onclick = () => launchConfetti();
+  btnWrap.appendChild(yes);
+
+  const no = document.createElement("button");
+  no.innerText = "No 😐";
+  no.style.position = "absolute";
+  no.style.background = "#555";
+  no.style.color = "white";
+  btnWrap.appendChild(no);
+
+  function moveNo() {
+    const maxX = btnWrap.offsetWidth - no.offsetWidth;
+    const maxY = btnWrap.offsetHeight - no.offsetHeight;
+    no.style.left = Math.random() * maxX + "px";
+    no.style.top = Math.random() * maxY + "px";
+  }
+
+  no.addEventListener("mouseenter", moveNo);
+  no.addEventListener("touchstart", moveNo);
+}
+
+/* 🎉 CONFETTI */
+function launchConfetti() {
+  for (let i = 0; i < 120; i++) {
+    const confetti = document.createElement("div");
+    confetti.style.position = "absolute";
+    confetti.style.width = "8px";
+    confetti.style.height = "8px";
+    confetti.style.background =
+      `hsl(${Math.random() * 360}, 100%, 60%)`;
+    confetti.style.top = "-10px";
+    confetti.style.left = Math.random() * 100 + "vw";
+    confetti.style.opacity = "1";
+    confetti.style.transform = "rotate(" + Math.random()*360 + "deg)";
+    document.body.appendChild(confetti);
+
+    const fall = Math.random() * 3 + 2;
+
+    confetti.animate([
+      { transform: `translateY(0px)` },
+      { transform: `translateY(100vh)` }
+    ], {
+      duration: fall * 1000,
+      easing: "linear"
+    });
+
+    setTimeout(() => confetti.remove(), fall * 1000);
+  }
+
+  alert("YAYYY 😭❤️ You're stuck with me forever.");
 }
 </script>
 
 </body>
 </html>
-
