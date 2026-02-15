@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
 <head>
 <title>Smth from ur bf</title>
@@ -26,6 +26,7 @@ canvas {
   text-align: center;
   width: 80%;
   max-width: 600px;
+  z-index: 2;
 }
 
 h1 {
@@ -39,6 +40,18 @@ h1 {
   font-size: 18px;
   line-height: 1.6;
   white-space: pre-line;
+}
+
+/* 💞 Floating up */
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-110vh); opacity: 0; }
+}
+
+/* 💥 Explosion animation */
+@keyframes explode {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
 }
 </style>
 </head>
@@ -66,13 +79,21 @@ for (let i = 0; i < 200; i++) {
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
     radius: Math.random() * 1.5,
-    alpha: Math.random()
+    alpha: Math.random(),
+    speed: Math.random() * 0.5 + 0.1
   });
 }
 
 function drawStars() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   stars.forEach(star => {
+    star.y += star.speed;
+    if (star.y > canvas.height) {
+      star.y = 0;
+      star.x = Math.random() * canvas.width;
+    }
+
     ctx.beginPath();
     ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
     ctx.fillStyle = "rgba(255,255,255," + star.alpha + ")";
@@ -82,17 +103,67 @@ function drawStars() {
 
 setInterval(drawStars, 50);
 
-// 📅 Set Anniversary Date (YYYY, Month-1, Day, Hour, Minute)
-const anniversary = new Date(2026, 1, 18, 0, 0, 0); 
-// Month is 1 because February = 1 (January = 0)
+// 💞 Floating Hearts (Clickable Explosion)
+function startHearts() {
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.innerHTML = "❤️";
+    heart.style.position = "absolute";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.bottom = "-20px";
+    heart.style.fontSize = Math.random() * 20 + 20 + "px";
+    heart.style.animation = "floatUp 6s linear forwards";
+    heart.style.cursor = "pointer";
+    heart.style.zIndex = "1";
 
+    // 💥 Click = explosion
+    heart.addEventListener("click", (e) => {
+      explodeHeart(e.clientX, e.clientY);
+      heart.remove();
+    });
+
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+
+  }, 400);
+}
+
+function explodeHeart(x, y) {
+  for (let i = 0; i < 12; i++) {
+    const spark = document.createElement("div");
+    spark.innerHTML = "✨";
+    spark.style.position = "absolute";
+    spark.style.left = x + "px";
+    spark.style.top = y + "px";
+    spark.style.fontSize = "18px";
+    spark.style.pointerEvents = "none";
+    spark.style.transition = "all 0.8s ease-out";
+
+    document.body.appendChild(spark);
+
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = Math.random() * 60 + 30;
+
+    setTimeout(() => {
+      spark.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(1.5)`;
+      spark.style.opacity = "0";
+    }, 10);
+
+    setTimeout(() => spark.remove(), 800);
+  }
+}
+
+startHearts();
+
+// 📅 Anniversary
+const anniversary = new Date(2026, 1, 18, 0, 0, 0);
 const now = new Date();
 
 const title = document.getElementById("title");
 const content = document.getElementById("content");
 
 if (now < anniversary) {
-  
+
   title.innerText = "Something Special Is Cominggg ❤️";
 
   function updateCountdown() {
@@ -110,9 +181,7 @@ if (now < anniversary) {
       minutes + " Minutes\n" +
       seconds + " Seconds";
 
-    if (diff <= 0) {
-      location.reload();
-    }
+    if (diff <= 0) location.reload();
   }
 
   setInterval(updateCountdown, 1000);
@@ -172,4 +241,3 @@ And... You're the best girlfriend everrrr ❤️`;
 
 </body>
 </html>
-
