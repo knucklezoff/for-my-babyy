@@ -50,53 +50,24 @@ button {
   cursor: pointer;
 }
 
-/* 💞 FLOATING HEARTS (CLICKABLE + EXPLODE) */
-setInterval(() => {
-  const heart = document.createElement("div");
-  heart.innerHTML = "❤️";
-  heart.style.position = "absolute";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.bottom = "-20px";
-  heart.style.fontSize = Math.random() * 20 + 20 + "px";
-  heart.style.animation = "floatUp 6s linear forwards";
-  heart.style.cursor = "pointer";
-  heart.style.zIndex = "1";
-
-  heart.addEventListener("click", (e) => {
-    explodeHearts(e.clientX, e.clientY);
-    heart.remove();
-  });
-
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 6000);
-}, 400);
-
-/* 💥 Sparkle Explosion */
-function explodeHearts(x, y) {
-  for (let i = 0; i < 15; i++) {
-    const spark = document.createElement("div");
-    spark.innerHTML = "✨";
-    spark.style.position = "absolute";
-    spark.style.left = x + "px";
-    spark.style.top = y + "px";
-    spark.style.pointerEvents = "none";
-    spark.style.fontSize = "18px";
-    spark.style.transition = "all 0.8s ease-out";
-    document.body.appendChild(spark);
-
-    const angle = Math.random() * 2 * Math.PI;
-    const distance = Math.random() * 60 + 40;
-
-    setTimeout(() => {
-      spark.style.transform =
-        `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(1.5)`;
-      spark.style.opacity = "0";
-    }, 10);
-
-    setTimeout(() => spark.remove(), 800);
-  }
+/* Floating hearts */
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-110vh); opacity: 0; }
 }
+</style>
+</head>
+<body>
 
+<canvas id="stars"></canvas>
+
+<div class="container">
+  <h1 id="title"></h1>
+  <div id="content"></div>
+  <div id="extra"></div>
+</div>
+
+<script>
 /* ⭐ STAR BACKGROUND */
 const canvas = document.getElementById("stars");
 const ctx = canvas.getContext("2d");
@@ -183,7 +154,7 @@ if (now < anniversary) {
 
   /* 🎮 Wanna Play Button */
   const gameBtn = document.createElement("button");
-  gameBtn.innerText = "Wanna play a game? ";
+  gameBtn.innerText = "Wanna play a game? 🎮";
   gameBtn.style.marginTop = "30px";
   gameBtn.style.background = "#ff66cc";
   extra.appendChild(gameBtn);
@@ -202,24 +173,53 @@ if (now < anniversary) {
 But with you, it feels meaningful..
 these 3 months rlly meant a lot to me..
 
-Happy 3 months my princess <3
-You're the best girlfriend everrrr ❤️`;
+In these 3 months, you’ve become a part of my everyday life,
+in my thoughts,
+in my happiness,
+in my everything.
 
-  let i = 0;
-  function typeWriter() {
-    if (i < text.length) {
-      content.innerHTML += text.charAt(i);
-      i++;
-      setTimeout(typeWriter, 40);
-    }
+You make ordinary days feel special..
+you make me feel understood.. 
+and that means more than I cn explain.
+
+and ik relationships aren't always perfect or simple, but the fact that we keep choosing each other
+every day makes me feel soo luckyy..
+
+There's moments where i lowk just sit and realise how lucky i am to have u..
+you make me feel loved in ways i never knew i needed..
+
+Thank you for choosing me everyday, even when things around us aren't always easy.
+I've never been treated so well so it means a lot to me, prob more than u realise..
+
+and even though i might be annoying or immature or a bad boyfriend in general sometimes,
+thank you for staying with me.
+thank you for loving me the way you do.
+thank you for everything you do for me..
+thank you for being with me, even at my worst..
+i love you so much and i promise you no one or nothing's ever gonna change that..
+mwah
+
+Happy 3 months my princess <3
+And... You're the best girlfriend everrrr ❤️`;
+
+let index = 0;
+
+function typeWriter() {
+  if (index < text.length) {
+    content.innerHTML += text.charAt(index);
+    index++;
+    setTimeout(typeWriter, 40);
   }
-  typeWriter();
+}
+
+typeWriter();
+
 }
 
 /* 💍 LOVE GAME */
 function startLoveGame() {
   const question = document.createElement("div");
-  question.innerText = "Will you stay with me forever?";
+  question.innerText = "Will you stay with me forever? ";
   question.style.marginTop = "30px";
   question.style.fontSize = "20px";
   question.style.color = "#ff99dd";
@@ -232,7 +232,7 @@ function startLoveGame() {
   extra.appendChild(btnWrap);
 
   const yes = document.createElement("button");
-  yes.innerText = "Yes <3";
+  yes.innerText = "Yes <33";
   yes.style.background = "#ff66cc";
   yes.onclick = () => launchConfetti();
   btnWrap.appendChild(yes);
@@ -283,11 +283,9 @@ function launchConfetti() {
     setTimeout(() => confetti.remove(), fall * 1000);
   }
 
-  alert("YAYYY 😭❤️ UR STUCK WITH ME FOREVERRRR");
+  alert("YAYYY 😭❤️ UR STUCK WITH ME FOREVERRR");
 }
 </script>
 
 </body>
 </html>
-
-
