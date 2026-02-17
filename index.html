@@ -2,6 +2,9 @@
 <html>
 <head>
 <title>Smth from ur bf</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
 body {
   margin: 0;
@@ -30,14 +33,16 @@ canvas {
 }
 
 h1 {
-  font-size: 28px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 32px;
   margin-bottom: 20px;
   color: #ff66cc;
   text-shadow: 0 0 10px #ff66cc;
 }
 
 #content {
-  font-size: 18px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 22px;
   line-height: 1.6;
   white-space: pre-line;
 }
@@ -50,10 +55,18 @@ button {
   cursor: pointer;
 }
 
-/* Floating hearts */
+/* Floating hearts animation */
 @keyframes floatUp {
   0% { transform: translateY(0); opacity: 1; }
   100% { transform: translateY(-110vh); opacity: 0; }
+}
+
+.heart {
+  position: fixed;
+  bottom: -20px;
+  animation: floatUp 6s linear forwards;
+  pointer-events: none;
+  z-index: 1;
 }
 </style>
 </head>
@@ -107,29 +120,40 @@ function drawStars() {
 }
 drawStars();
 
-/* 💞 FLOATING HEARTS */
+/* 💞 FIXED FLOATING HEARTS */
 setInterval(() => {
+
   const heart = document.createElement("div");
+
   heart.innerHTML = "❤️";
-  heart.style.position = "absolute";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.bottom = "-20px";
-  heart.style.fontSize = Math.random() * 20 + 20 + "px";
-  heart.style.animation = "floatUp 6s linear forwards";
-  heart.style.pointerEvents = "none";
+  heart.className = "heart";
+
+  heart.style.left = Math.random() * window.innerWidth + "px";
+  heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+
   document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 6000);
-}, 400);
+
+  setTimeout(() => {
+    heart.remove();
+  }, 6000);
+
+}, 500);
 
 /* 📅 COUNTDOWN */
 const anniversary = new Date(2026, 1, 18, 0, 0, 0);
+
 const title = document.getElementById("title");
 const content = document.getElementById("content");
 const extra = document.getElementById("extra");
 
+let messageStarted = false;
+
 function showAnniversaryMessage() {
 
-  extra.innerHTML = ""; // remove game button permanently
+  if (messageStarted) return;
+  messageStarted = true;
+
+  extra.innerHTML = "";
 
   title.innerText = "Happy 3 Months Babyyyy ❤️";
 
@@ -172,11 +196,17 @@ And... You're the best girlfriend everrrr ❤️`;
   let index = 0;
 
   function typeWriter() {
+
     if (index < text.length) {
+
       content.innerHTML += text.charAt(index);
+
       index++;
+
       setTimeout(typeWriter, 40);
+
     }
+
   }
 
   typeWriter();
@@ -185,18 +215,25 @@ And... You're the best girlfriend everrrr ❤️`;
 function updateCountdown() {
 
   const now = new Date();
+
   const diff = anniversary - now;
 
   if (diff <= 0) {
+
     showAnniversaryMessage();
+
     return;
+
   }
 
   title.innerText = "Something Special Is Cominggg ❤️";
 
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
   const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+
   const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
   const seconds = Math.floor((diff / 1000) % 60);
 
   content.innerText =
@@ -206,59 +243,92 @@ function updateCountdown() {
     seconds + " Seconds";
 }
 
-/* 🎮 Game button ONLY before anniversary */
+/* 🎮 GAME BUTTON */
 function addGameButton() {
 
   const gameBtn = document.createElement("button");
+
   gameBtn.innerText = "Wanna play a game? 🎮";
+
   gameBtn.style.marginTop = "30px";
+
   gameBtn.style.background = "#ff66cc";
+
   extra.appendChild(gameBtn);
 
   gameBtn.onclick = () => {
+
     gameBtn.remove();
+
     startLoveGame();
+
   };
+
 }
 
 /* 💍 LOVE GAME */
 function startLoveGame() {
 
   const question = document.createElement("div");
+
   question.innerText = "Will you stay with me forever? ";
+
   question.style.marginTop = "30px";
+
   question.style.fontSize = "20px";
+
   question.style.color = "#ff99dd";
+
   extra.appendChild(question);
 
   const btnWrap = document.createElement("div");
+
   btnWrap.style.marginTop = "20px";
+
   btnWrap.style.position = "relative";
+
   btnWrap.style.height = "60px";
+
   extra.appendChild(btnWrap);
 
   const yes = document.createElement("button");
+
   yes.innerText = "Yes <33";
+
   yes.style.background = "#ff66cc";
+
   yes.onclick = () => launchConfetti();
+
   btnWrap.appendChild(yes);
 
   const no = document.createElement("button");
+
   no.innerText = "No :(";
+
   no.style.position = "absolute";
+
   no.style.background = "#555";
+
   no.style.color = "white";
+
   btnWrap.appendChild(no);
 
   function moveNo() {
+
     const maxX = btnWrap.offsetWidth - no.offsetWidth;
+
     const maxY = btnWrap.offsetHeight - no.offsetHeight;
+
     no.style.left = Math.random() * maxX + "px";
+
     no.style.top = Math.random() * maxY + "px";
+
   }
 
   no.addEventListener("mouseenter", moveNo);
+
   no.addEventListener("touchstart", moveNo);
+
 }
 
 /* 🎉 CONFETTI */
@@ -269,15 +339,17 @@ function launchConfetti() {
     const confetti = document.createElement("div");
 
     confetti.style.position = "absolute";
+
     confetti.style.width = "8px";
+
     confetti.style.height = "8px";
+
     confetti.style.background =
       `hsl(${Math.random() * 360}, 100%, 60%)`;
+
     confetti.style.top = "-10px";
+
     confetti.style.left = Math.random() * 100 + "vw";
-    confetti.style.opacity = "1";
-    confetti.style.transform =
-      "rotate(" + Math.random()*360 + "deg)";
 
     document.body.appendChild(confetti);
 
@@ -292,20 +364,28 @@ function launchConfetti() {
     });
 
     setTimeout(() => confetti.remove(), fall * 1000);
+
   }
 
   alert("YAYYY 😭❤️ UR STUCK WITH ME FOREVERRR");
+
 }
 
 /* START */
 const now = new Date();
 
 if (now < anniversary) {
+
   updateCountdown();
+
   setInterval(updateCountdown, 1000);
+
   addGameButton();
+
 } else {
+
   showAnniversaryMessage();
+
 }
 </script>
 
