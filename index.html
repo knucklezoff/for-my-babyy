@@ -123,50 +123,17 @@ setInterval(() => {
 
 /* 📅 COUNTDOWN */
 const anniversary = new Date(2026, 1, 18, 0, 0, 0);
-const now = new Date();
 const title = document.getElementById("title");
 const content = document.getElementById("content");
 const extra = document.getElementById("extra");
 
-if (now < anniversary) {
+function showAnniversaryMessage() {
 
-  title.innerText = "Something Special Is Cominggg ❤️";
-
-  function updateCountdown() {
-    const diff = anniversary - new Date();
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-
-    content.innerText =
-      days + " Days\n" +
-      hours + " Hours\n" +
-      minutes + " Minutes\n" +
-      seconds + " Seconds";
-
-    if (diff <= 0) location.reload();
-  }
-
-  setInterval(updateCountdown, 1000);
-  updateCountdown();
-
-  /* 🎮 Wanna Play Button */
-  const gameBtn = document.createElement("button");
-  gameBtn.innerText = "Wanna play a game? 🎮";
-  gameBtn.style.marginTop = "30px";
-  gameBtn.style.background = "#ff66cc";
-  extra.appendChild(gameBtn);
-
-  gameBtn.onclick = () => {
-    gameBtn.remove();
-    startLoveGame();
-  };
-
-} else {
+  extra.innerHTML = ""; // remove game button permanently
 
   title.innerText = "Happy 3 Months Babyyyy ❤️";
+
+  content.innerHTML = "";
 
   const text = `Three months isn’t rlly a long time...
 
@@ -202,22 +169,61 @@ mwah
 Happy 3 months my princess <3
 And... You're the best girlfriend everrrr ❤️`;
 
-let index = 0;
+  let index = 0;
 
-function typeWriter() {
-  if (index < text.length) {
-    content.innerHTML += text.charAt(index);
-    index++;
-    setTimeout(typeWriter, 40);
+  function typeWriter() {
+    if (index < text.length) {
+      content.innerHTML += text.charAt(index);
+      index++;
+      setTimeout(typeWriter, 40);
+    }
   }
+
+  typeWriter();
 }
 
-typeWriter();
+function updateCountdown() {
 
+  const now = new Date();
+  const diff = anniversary - now;
+
+  if (diff <= 0) {
+    showAnniversaryMessage();
+    return;
+  }
+
+  title.innerText = "Something Special Is Cominggg ❤️";
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  content.innerText =
+    days + " Days\n" +
+    hours + " Hours\n" +
+    minutes + " Minutes\n" +
+    seconds + " Seconds";
+}
+
+/* 🎮 Game button ONLY before anniversary */
+function addGameButton() {
+
+  const gameBtn = document.createElement("button");
+  gameBtn.innerText = "Wanna play a game? 🎮";
+  gameBtn.style.marginTop = "30px";
+  gameBtn.style.background = "#ff66cc";
+  extra.appendChild(gameBtn);
+
+  gameBtn.onclick = () => {
+    gameBtn.remove();
+    startLoveGame();
+  };
 }
 
 /* 💍 LOVE GAME */
 function startLoveGame() {
+
   const question = document.createElement("div");
   question.innerText = "Will you stay with me forever? ";
   question.style.marginTop = "30px";
@@ -257,8 +263,11 @@ function startLoveGame() {
 
 /* 🎉 CONFETTI */
 function launchConfetti() {
+
   for (let i = 0; i < 120; i++) {
+
     const confetti = document.createElement("div");
+
     confetti.style.position = "absolute";
     confetti.style.width = "8px";
     confetti.style.height = "8px";
@@ -267,7 +276,9 @@ function launchConfetti() {
     confetti.style.top = "-10px";
     confetti.style.left = Math.random() * 100 + "vw";
     confetti.style.opacity = "1";
-    confetti.style.transform = "rotate(" + Math.random()*360 + "deg)";
+    confetti.style.transform =
+      "rotate(" + Math.random()*360 + "deg)";
+
     document.body.appendChild(confetti);
 
     const fall = Math.random() * 3 + 2;
@@ -284,6 +295,17 @@ function launchConfetti() {
   }
 
   alert("YAYYY 😭❤️ UR STUCK WITH ME FOREVERRR");
+}
+
+/* START */
+const now = new Date();
+
+if (now < anniversary) {
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+  addGameButton();
+} else {
+  showAnniversaryMessage();
 }
 </script>
 
